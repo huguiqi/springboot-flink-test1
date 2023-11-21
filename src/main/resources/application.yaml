@@ -1,0 +1,11 @@
+server:
+  port: 9999
+#flink:
+#  env:
+#    parallelism: 2
+#  jobmanager:
+#    rpc.address: 192.168.0.38
+#    rpc.port: 6123
+  state:
+    backend: rocksdb
+    backend.fs.checkpointdir: file:///tmp/checkpoints
