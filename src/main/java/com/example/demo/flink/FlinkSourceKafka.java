@@ -2,6 +2,7 @@ package com.example.demo.flink;
 
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -19,7 +20,7 @@ import java.util.Properties;
  */
 public class FlinkSourceKafka {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(4);
         Properties props = new Properties();
@@ -27,5 +28,11 @@ public class FlinkSourceKafka {
         props.put(ConsumerConfig.GROUP_ID_CONFIG,"kafka-group-test");
 
         FlinkKafkaConsumer consumer = new FlinkKafkaConsumer("flinkTopicTest",new SimpleStringSchema(),props);
+
+        DataStream dataStream = env.addSource(consumer);
+        dataStream.print();
+
+        env.execute("kafka stream task");
+
     }
 }
